@@ -5,6 +5,7 @@ FROM ghcr.io/rocker-org/devcontainer/tidyverse:${VARIANT}
 
 # Install additional R packages
 RUN install2.r --error --skipinstalled -n -1 \
+        kableExtra\
         statip \
         patchwork \
         paletteer \
@@ -45,5 +46,4 @@ RUN quarto install tinytex
 # quarto install pandoc
 RUN quarto install pandoc
 
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - &&\
-sudo apt-get install -y nodejs
+RUN cd /workspaces/data-devcontainer-example && quarto install tinytex && 
