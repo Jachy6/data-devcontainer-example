@@ -1,0 +1,314 @@
+---
+title: "Data Wrangling (Data Preprocessing)"
+author: "Timothy Jach"
+subtitle: "Practical assessment 1"
+date: last-modified
+date-format: long
+bibliography: references.bib
+csl: rmit-university-harvard.csl
+format:
+  pdf:
+    pandoc_args: ["--wrap=preserve"]
+    papersize: a4
+    geometry:
+      - top=20mm
+      - left=15mm
+      
+header-includes:
+  - \usepackage{datetime}
+  - \usepackage{fvextra}
+  - \usepackage{fancyvrb}
+  - \usepackage{listings}
+  - \usepackage{color}
+execute:
+  echo: true
+title-block-banner: true
+highlight-style: github
+
+---
+
+```{r, include=TRUE, message=FALSE, warning = FALSE, echo = FALSE}
+library(tidyverse)
+library(kableExtra)
+```
+
+## Student names, numbers and percentage of contributions
+
+```{r, echo=FALSE}
+na<- c(" Timothy Jach")
+no<- c("s4015823")
+pc<- c("100%")
+
+s<- data.frame(cbind(na,no,pc))
+colnames(s)<- c("Student name", "Student number", "Percentage of contribution")
+
+s %>% kbl(caption = "Group information", format = "latex", booktabs = T) %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(latex_options = "HOLD_position")
+
+```
+
+## Setup
+
+```{r setup, message=FALSE, warning = FALSE}
+library(tidyverse)
+library(kableExtra)
+```
+
+## Data Description
+
+![Image by Maksym Kaharlytskyi on [Unsplash](https://unsplash.com/photos/3uJt73tr4hI)](/workspaces/MATH2349/assessment-1/Working Files/wine-stock-image.png)
+
+
+### Data Source
+
+The data set on wine quality, which was used for the purpose of this assignment, can be found at the following URL:
+
+<https://www.kaggle.com/datasets/rajyellow46/wine-quality>
+
+**OR**
+
+<https://archive.ics.uci.edu/ml/datasets/Wine+Quality>
+
+### About the Data
+
+This dataset on wine quality contains information on different Portugese "Vinho Verde" wines. This includes type, multiple chemical concentrations and an average sensory 'quality' score.
+
+All the chemical components measured in this dataset will are said to have an impact on the sensory quality of a wine at different levels. [@Cortez2009]
+
+#### Units Reference
+
+-   g/dm³ = grams per decimetre cubed
+-   mg/dm³ = milligrams per decimetre cubed
+-   g/cm³ = grams per centimetre cubed
+
+### Variables
+
+1)  **type:** is the main type of wine. (red or white)
+2)  **fixed acidity:** The amount of tartic acid (g/dm³). These acids do not evapourate readily. (g/dm³)
+3)  **volatile acidity:** The amount of acetic acid in the wine. These acids do evapourate readily. (g/dm³)
+4)  **citric acid:** The amount of citric acid in the wine. (g/dm³)
+5)  **residual sugar:** The amount of of sugar remaining in the wine, sugar is normally in part converted to alchol in the production of wine, this is what is left after that process hence the term residual sugar. (g/dm³)
+6)  **chlorides:** A measure of the amount of salts. (g/dm³)
+7)  **free sulfur dioxide:** The amount of free sulfur dioxide in the wine, acts as a preservative, this sulfur dioxide is not chemically attached to other molecules in the wine. (mg/dm³)
+8)  **total sulfur dioxide:** The total amount of sulfur dioxide (SO2) in the wine, including both free and bound forms. Bound sulfur dioxide is chemically attached to other molecules (mg/dm³).
+9)  **density:** The density of the wine (given weight per volume), this is primarily affected by concentration of alcohol and sugar. (g/cm³)
+10) **pH:** A standard measure of acidity. The scale is logarithmic (base 10) with a score of 7 indicating neutral. Anything above 7 is considered basic and anything below 7 is considered acidic. Wine is considered acidic with a with a typical acidity of 3.5 to 4.5[@Cortez2009].
+11) **sulphates:** The amount of potassium sulphate in the wine. (g/dm³)
+12) **alcohol:** The percentage of alcohol by volume in the wine. (vol.%)
+13) **quality:** A median score of a minimum of 3 wine assors blind tastes. 0 (very bad) to 10 (excellent).
+
+## Read/Import Data
+
+### Code and Output
+
+```{r}
+setwd("/workspaces/MATH2349/assessment-1/Working Files/")
+
+wine <- read_csv("winequalityN.csv", show_col_types = FALSE)
+
+head(wine)
+
+```
+
+```{r, echo = FALSE}
+
+# # Display the table using kableExtra
+# wine_head <- head(wine)
+# colnames(wine_head) <- c("type", "fixed acidity", "volatile acidity", "citric acid",
+#                          "residual sugar", "chlorides", "free sulfur dioxide",
+#                          "total sulfur dioxide", "density", "pH", "sulphates",
+#                          "alcohol", "quality")
+# wine_head %>% kbl(caption = "Wine Table Header") %>%
+#   kable_classic(full_width = F, html_font = "Cambria") %>%
+#   column_spec(1:10, width = "2cm")
+#   kable_styling(latex_options = "HOLD_position")
+```
+
+### Explanation
+
+In this step, the Wine Quality dataset is read into R and saved as a data frame. The readr package included in tidyverse is used to read the CSV file.
+
+1.  **`setwd("/workspaces/MATH2349/assessment-1/Working Files/")`**:
+
+    This sets the current working directory of the R console in this case my folder containing the wine data CSV file.
+
+2.  **`wine <- read_csv("winequalityN.csv", show_col_types = FALSE)`:**
+
+    This line uses the `read_csv` function from the `readr` package to read the csv file '**winequalityN.csv**'. This is stored as a dataframe in the variable **`wine`**. 
+
+3.  **`head(wine)`:**
+    
+    This is calling the `head` function to display the first 6 rows of the data frame. 
+
+## Inspect and Understand
+
+### Code and Output
+
+```{r, echo = FALSE}
+
+wine_dim <- dim(wine)
+
+wine_colnames <- colnames(wine)
+
+```
+
+```{r}
+dim(wine)
+
+colnames(wine)
+
+colnames(wine) <- c("type", "f_acid", "v_acid", "citric", "res_sug", "salts",
+ "fr_SO2", "to_SO2", "density", "pH", "sulphas", "alchl", "qual")
+
+str(wine)
+
+wine$type <- as.factor(wine$type)
+wine$qual <- as.integer(wine$qual)
+
+levels(wine$type)
+
+str(wine)
+
+```
+
+
+
+### Explanation
+
+In this step the dataset is inspected to get a better understanding of the data. The inspection include checking the dimensions of the data frame, the column names, the data types, the levels of the factor variables.
+
+1. **`dim(wine)`**
+
+    Here the function `dim()` checks the dimension of the data frame variable `wine` and returns the number of rows and columns.
+    From the output we can see that the dimensions of the wine dataset are **`r wine_dim[1]`** rows and **`r wine_dim[2]`** columns.
+2. **`colnames(wine)`**
+
+    Here the function `colnames()` checks the column names of the data frame variable `wine` and returns the column names.
+    From the output we can see that the column names of the wine dataset are **`r paste(wine_colnames, collapse = ", ")`**.
+
+3. **`colnames(wine) <- c("type", "f_acid", "v_acid", "citric", "res_sug", "salts", "fr_SO2", "to_SO2", "density", "pH", "sulphas", "alchl", "qual")`**
+
+    Here the function `colnames()` is used to change the column names of the data frame variable `wine`.
+    The new column names are given as a vector of strings. These column names were changed so that they are shorter and spaces were replaced with underscores. This will make it easier to work with and display the data frame.
+    If we wished to change the column names one at a time could use the function `colnames()` to do so.
+    Example: `colnames(wine)[colnames(wine) == "chlorides"] <- "salts"`
+
+4. **`str(wine)`**
+
+    Here the function `str()` checks the structure of the data frame variable `wine` and returns the data types of the variables.
+    Structure here refers to the data types of the variables (numeric, character, factor) briefly:
+    - Numeric variables refer to interger or decimal number variables. We can perform mathematical operations on numeric variables.
+    - Character variables refer to text variables letters, words or sentences. Often used for description or labelling.
+    - Factor variables refer to categorical data. These are variables are stored as intergers but are mapped to a coresponding catergorical value. This allows us to perform mathematical operations on the data.
+    This line was run twice to check the data types before and after the conversion of the factor variable `type` to a factor variable.
+    From the output we can see that the data types of the wine dataset are all numeric except for the factor variable `type` which is a character variable.
+5. **`wine$type <- as.factor(wine$type)`** 
+    **`wine$quality <- as.integer(wine$quality)`**
+
+    Here we perform two type conversions. The first converts the character variable `type` to a factor variable. The second converts the numeric variable `quality` to an integer variable.
+6. **`levels(wine$type)`**
+
+    Here the function `levels()` checks the levels of the factor variable `type` in the data frame variable `wine` and returns the levels.
+    From the output we can see that the levels of the factor variable `type` in the wine dataset are **`r paste(levels(wine$type), collapse = ", ")`**.
+    Theses levels are appropriate and don't need to be changed.
+
+## Subsetting
+
+### Code and Output
+
+```{r}
+wine_subset <- wine[1:10, ]
+
+print(wine_subset)
+
+wine_matrix <- as.matrix(wine_subset)
+
+print(wine_matrix)
+
+```
+
+### Explanation
+
+In this step the dataset is subsetted to create a new data frame. The new data frame is then converted to a matrix.
+
+1. **`wine_subset <- wine[1:10, ]`**
+    Here the data frame variable `wine` is subsetted to create a new data frame variable `wine_subset`.
+    The subset is created by selecting the first 10 rows and all columns of the data frame `wine`.
+    The subset is assigned to the variable `wine_subset`.
+2. **`print(wine_subset)`**
+    Here the function `print()` is used to display the data frame variable `wine_subset`.
+    From the output we can see that the first 10 rows of the wine dataset are displayed.
+3. **`wine_matrix <- as.matrix(wine_subset)`**
+    Here the data frame variable `wine_subset` is converted to a matrix variable `wine_matrix`.
+    The matrix is created by assigning the data frame variable `wine_subset` to the matrix function `as.matrix()`.
+4. **`str(wine_matrix)`**
+    Here the function `str()` checks the structure of the matrix variable `wine_matrix` and returns the data types of the variables.
+    From the output we can see that the data frame variable `wine_subset` is now a matrix variable `wine_matrix`.
+    This will be useful when we perform the analysis as it converts the factor variable `type` to a numeric variable.
+
+## Create a new Data Frame
+
+### Code and Output
+
+```{r}
+age <- c(1, 18, 4, 18, 16, 1, 2, 18, 11, 19)
+
+str(age)
+
+school <- c("Primary", "Tertiary", "Primary", "Secondary", "Tertiary", "Secondary",
+"Secondary", "Tertiary", "Primary", "Primary")
+
+str(school)
+
+school_factor <- factor(school, levels = c("Primary", "Secondary", "Tertiary"),
+ordered = TRUE)
+
+str(school_factor)
+
+new_df <- data.frame(age, school_factor)
+
+str(new_df)
+
+rand_dec <- c(runif(10))
+
+new_df <- cbind(new_df, rand_dec)
+
+print(new_df)
+
+```
+
+### Explanation:
+
+1. `age <- c(1, 18, 4, 18, 16, 1, 2, 18, 11, 19)`
+
+    Here we create an integer variable `age` with 10 observations.
+    The function `c()` creates a vector of the values passed to it. 
+2. `school <- c("Primary", "Tertiary", "Primary", "Secondary"...)`
+
+    Here we create a variable `school` with 10 observations. using the same method in the last step.
+3. `school_factor <- factor(school, levels = c("Primary", "Secondary", "Tertiary"), ordered = TRUE)`
+
+    Here we convert the variable `school` to a factor variable `school_factor` using the function `factor()`.
+    The levels are passed into the factor function `factor()` using the argument `levels = c("Primary", "Secondary", "Tertiary")`.
+    The argument `ordered = TRUE` is used to specify that the factor variable is ordered.
+4. `str(school_factor)`
+
+    From the output we can see that the data type of the factor variable `school_factor` is a factor variable and the levels are **`r paste(levels(school_factor), collapse = ", ")`**.
+5. `new_df <- data.frame(age, school_factor)`
+
+    Here we create a new data frame `new_df` we pass in the variables `age` and `school_factor` which will be the columns of the data frame.
+6. `rand_dec <- c(runif(10))`
+
+    Here we define a new variable and randomly generate 10 observations using the function `runif()`.
+7. `new_df <- cbind(new_df, rand_dec)`
+
+    Here we add the variable `rand_dec` to the data frame `new_df` using the function `cbind()`. This will appear as a new column in the data frame.
+8. `print(new_df)`
+
+    Here we display the final data frame `new_df` using the function `print()`.
+
+## References
+
+::: {#refs}
+:::

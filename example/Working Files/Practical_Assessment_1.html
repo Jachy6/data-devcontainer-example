@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Timothy Jach">
+
+<title>Data Wrangling (Data Preprocessing)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="Practical_Assessment_1_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Practical_Assessment_1_files/libs/quarto-html/quarto.js"></script>
+<script src="Practical_Assessment_1_files/libs/quarto-html/popper.min.js"></script>
+<script src="Practical_Assessment_1_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Practical_Assessment_1_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Practical_Assessment_1_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Practical_Assessment_1_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Practical_Assessment_1_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Practical_Assessment_1_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Practical_Assessment_1_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+<script src="Practical_Assessment_1_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="Practical_Assessment_1_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data Wrangling (Data Preprocessing)</h1>
+<p class="subtitle lead">Practical assessment 1</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Timothy Jach </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import tidyverse</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="student-names-numbers-and-percentage-of-contributions" class="level2">
+<h2 class="anchored" data-anchor-id="student-names-numbers-and-percentage-of-contributions">Student names, numbers and percentage of contributions</h2>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class=" lightable-classic" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Group information</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Student name </th>
+   <th style="text-align:left;"> Student number </th>
+   <th style="text-align:left;"> Percentage of contribution </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Timothy Jach </td>
+   <td style="text-align:left;"> s4015823 </td>
+   <td style="text-align:left;"> 100% </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</section>
+<section id="data-description" class="level2">
+<h2 class="anchored" data-anchor-id="data-description">Data Description</h2>
+<p>The Wine Quality dataset is available on Kaggle and can be found at the following URL:</p>
+<p><a href="https://www.kaggle.com/datasets/rajyellow46/wine-quality" class="uri">https://www.kaggle.com/datasets/rajyellow46/wine-quality</a></p>
+<p>This dataset contains information about different wines, including their physical and chemical properties, as well as their quality rating. The dataset is divided into two categories: red wine and white wine. The data was originally sourced from the UCI Machine Learning Repository.</p>
+<p>The variables in the dataset are:</p>
+<ol type="1">
+<li><strong>type:</strong> The type of wine (red or white).</li>
+<li><strong>fixed acidity:</strong> The amount of non-volatile acids present in the wine (measured in g/dm³).</li>
+<li>volatile acidity: The amount of acetic acid in the wine, which can give an undesirable vinegar taste if present in high concentrations (measured in g/dm³).</li>
+<li><strong>citric acid:</strong> A weak organic acid found in citrus fruits, which can add freshness and flavor to the wine (measured in g/dm³).</li>
+<li><strong>residual sugar:</strong> The amount of sugar remaining in the wine after fermentation (measured in g/dm³).</li>
+<li><strong>chlorides:</strong> The amount of salt present in the wine (measured in g/dm³).</li>
+<li><strong>free sulfur dioxide:</strong> The amount of free sulfur dioxide (SO2) in the wine, which can act as an antioxidant and antimicrobial agent (measured in mg/dm³).</li>
+<li><strong>total sulfur dioxide:</strong> The total amount of sulfur dioxide (SO2) in the wine, including both free and bound forms (measured in mg/dm³).</li>
+<li><strong>density:</strong> The density of the wine, which is affected by the concentration of alcohol and sugar (measured in g/cm³).</li>
+<li><strong>pH:</strong> A measure of the acidity or basicity of the wine, where lower values indicate higher acidity and higher values indicate more basic wines. The scale ranges from 0 (very acidic) to 14 (very basic), with 7 being neutral.</li>
+<li><strong>sulphates:</strong> The amount of potassium sulphate (K2SO4) in the wine, which can contribute to the wine’s overall taste and aroma (measured in g/dm³).</li>
+<li><strong>alcohol:</strong> The percentage of alcohol by volume in the wine.</li>
+<li><strong>quality:</strong> The quality rating of the wine, assigned by wine experts on a scale of 0 (low quality) to 10 (high quality).</li>
+</ol>
+</section>
+<section id="readimport-data" class="level2">
+<h2 class="anchored" data-anchor-id="readimport-data">Read/Import Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"/workspaces/MATH2349/assessment-1/Working Files/"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>wine <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"winequalityN.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(wine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 13
+  type  fixed ac…¹ volat…² citri…³ resid…⁴ chlor…⁵ free …⁶ total…⁷ density    pH
+  &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+1 white        7      0.27    0.36    20.7   0.045      45     170   1.00   3   
+2 white        6.3    0.3     0.34     1.6   0.049      14     132   0.994  3.3 
+3 white        8.1    0.28    0.4      6.9   0.05       30      97   0.995  3.26
+4 white        7.2    0.23    0.32     8.5   0.058      47     186   0.996  3.19
+5 white        7.2    0.23    0.32     8.5   0.058      47     186   0.996  3.19
+6 white        8.1    0.28    0.4      6.9   0.05       30      97   0.995  3.26
+# … with 3 more variables: sulphates &lt;dbl&gt;, alcohol &lt;dbl&gt;, quality &lt;dbl&gt;, and
+#   abbreviated variable names ¹​`fixed acidity`, ²​`volatile acidity`,
+#   ³​`citric acid`, ⁴​`residual sugar`, ⁵​chlorides, ⁶​`free sulfur dioxide`,
+#   ⁷​`total sulfur dioxide`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare a new data frame with the first 6 rows and full column names</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>wine_head <span class="ot">&lt;-</span> <span class="fu">head</span>(wine)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(wine_head) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"type"</span>, <span class="st">"fixed acidity"</span>, <span class="st">"volatile acidity"</span>, <span class="st">"citric acid"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"residual sugar"</span>, <span class="st">"chlorides"</span>, <span class="st">"free sulfur dioxide"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"total sulfur dioxide"</span>, <span class="st">"density"</span>, <span class="st">"pH"</span>, <span class="st">"sulphates"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"alcohol"</span>, <span class="st">"quality"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the table using kable</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>wine_head <span class="sc">%&gt;%</span> <span class="fu">kbl</span>(<span class="at">caption =</span> <span class="st">"Wine Table Header"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>(<span class="at">full_width =</span> F, <span class="at">html_font =</span> <span class="st">"Cambria"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class=" lightable-classic" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Wine Table Header</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> type </th>
+   <th style="text-align:right;"> fixed acidity </th>
+   <th style="text-align:right;"> volatile acidity </th>
+   <th style="text-align:right;"> citric acid </th>
+   <th style="text-align:right;"> residual sugar </th>
+   <th style="text-align:right;"> chlorides </th>
+   <th style="text-align:right;"> free sulfur dioxide </th>
+   <th style="text-align:right;"> total sulfur dioxide </th>
+   <th style="text-align:right;"> density </th>
+   <th style="text-align:right;"> pH </th>
+   <th style="text-align:right;"> sulphates </th>
+   <th style="text-align:right;"> alcohol </th>
+   <th style="text-align:right;"> quality </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> white </td>
+   <td style="text-align:right;"> 7.0 </td>
+   <td style="text-align:right;"> 0.27 </td>
+   <td style="text-align:right;"> 0.36 </td>
+   <td style="text-align:right;"> 20.7 </td>
+   <td style="text-align:right;"> 0.045 </td>
+   <td style="text-align:right;"> 45 </td>
+   <td style="text-align:right;"> 170 </td>
+   <td style="text-align:right;"> 1.0010 </td>
+   <td style="text-align:right;"> 3.00 </td>
+   <td style="text-align:right;"> 0.45 </td>
+   <td style="text-align:right;"> 8.8 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> white </td>
+   <td style="text-align:right;"> 6.3 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.34 </td>
+   <td style="text-align:right;"> 1.6 </td>
+   <td style="text-align:right;"> 0.049 </td>
+   <td style="text-align:right;"> 14 </td>
+   <td style="text-align:right;"> 132 </td>
+   <td style="text-align:right;"> 0.9940 </td>
+   <td style="text-align:right;"> 3.30 </td>
+   <td style="text-align:right;"> 0.49 </td>
+   <td style="text-align:right;"> 9.5 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> white </td>
+   <td style="text-align:right;"> 8.1 </td>
+   <td style="text-align:right;"> 0.28 </td>
+   <td style="text-align:right;"> 0.40 </td>
+   <td style="text-align:right;"> 6.9 </td>
+   <td style="text-align:right;"> 0.050 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 97 </td>
+   <td style="text-align:right;"> 0.9951 </td>
+   <td style="text-align:right;"> 3.26 </td>
+   <td style="text-align:right;"> 0.44 </td>
+   <td style="text-align:right;"> 10.1 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> white </td>
+   <td style="text-align:right;"> 7.2 </td>
+   <td style="text-align:right;"> 0.23 </td>
+   <td style="text-align:right;"> 0.32 </td>
+   <td style="text-align:right;"> 8.5 </td>
+   <td style="text-align:right;"> 0.058 </td>
+   <td style="text-align:right;"> 47 </td>
+   <td style="text-align:right;"> 186 </td>
+   <td style="text-align:right;"> 0.9956 </td>
+   <td style="text-align:right;"> 3.19 </td>
+   <td style="text-align:right;"> 0.40 </td>
+   <td style="text-align:right;"> 9.9 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> white </td>
+   <td style="text-align:right;"> 7.2 </td>
+   <td style="text-align:right;"> 0.23 </td>
+   <td style="text-align:right;"> 0.32 </td>
+   <td style="text-align:right;"> 8.5 </td>
+   <td style="text-align:right;"> 0.058 </td>
+   <td style="text-align:right;"> 47 </td>
+   <td style="text-align:right;"> 186 </td>
+   <td style="text-align:right;"> 0.9956 </td>
+   <td style="text-align:right;"> 3.19 </td>
+   <td style="text-align:right;"> 0.40 </td>
+   <td style="text-align:right;"> 9.9 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> white </td>
+   <td style="text-align:right;"> 8.1 </td>
+   <td style="text-align:right;"> 0.28 </td>
+   <td style="text-align:right;"> 0.40 </td>
+   <td style="text-align:right;"> 6.9 </td>
+   <td style="text-align:right;"> 0.050 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 97 </td>
+   <td style="text-align:right;"> 0.9951 </td>
+   <td style="text-align:right;"> 3.26 </td>
+   <td style="text-align:right;"> 0.44 </td>
+   <td style="text-align:right;"> 10.1 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>In this step, the Wine Quality dataset is read into R and saved as a data frame. The readr package, which is part of the tidyverse, is used to read the CSV file.</p>
+<p>Here is a description of the code provided:</p>
+<ol type="1">
+<li><p><strong><code>setwd("/workspaces/MATH2349/assessment-1/Working Files/")</code></strong>:</p>
+<p>This line sets the working directory to the location where the data file is stored. This makes it easier to read the data file without specifying the full path.</p></li>
+<li><p><strong><code>wine &lt;- read_csv("winequalityN.csv", show_col_types = FALSE)</code>:</strong></p>
+<p>This line reads the CSV file called “winequalityN.csv” using the read_csv function from the readr package. The show_col_types = FALSE argument suppresses the column type messages when reading the CSV file. The resulting data frame is stored in a variable called wine.</p></li>
+<li><p><strong><code>head(wine)</code>:</strong></p>
+<p>This line displays the first six rows of the wine data frame using the head function. This is helpful for getting a quick glimpse of the dataset and checking that it was imported correctly.</p></li>
+</ol>
+</section>
+<section id="inspect-and-understand" class="level2">
+<h2 class="anchored" data-anchor-id="inspect-and-understand">Inspect and Understand</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the dimensions of the data frame</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(wine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6497   13</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the column names in the data frame</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(wine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "type"                 "fixed acidity"        "volatile acidity"    
+ [4] "citric acid"          "residual sugar"       "chlorides"           
+ [7] "free sulfur dioxide"  "total sulfur dioxide" "density"             
+[10] "pH"                   "sulphates"            "alcohol"             
+[13] "quality"             </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize the types of variables</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(wine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>spc_tbl_ [6,497 × 13] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ type                : chr [1:6497] "white" "white" "white" "white" ...
+ $ fixed acidity       : num [1:6497] 7 6.3 8.1 7.2 7.2 8.1 6.2 7 6.3 8.1 ...
+ $ volatile acidity    : num [1:6497] 0.27 0.3 0.28 0.23 0.23 0.28 0.32 0.27 0.3 0.22 ...
+ $ citric acid         : num [1:6497] 0.36 0.34 0.4 0.32 0.32 0.4 0.16 0.36 0.34 0.43 ...
+ $ residual sugar      : num [1:6497] 20.7 1.6 6.9 8.5 8.5 6.9 7 20.7 1.6 1.5 ...
+ $ chlorides           : num [1:6497] 0.045 0.049 0.05 0.058 0.058 0.05 0.045 0.045 0.049 0.044 ...
+ $ free sulfur dioxide : num [1:6497] 45 14 30 47 47 30 30 45 14 28 ...
+ $ total sulfur dioxide: num [1:6497] 170 132 97 186 186 97 136 170 132 129 ...
+ $ density             : num [1:6497] 1.001 0.994 0.995 0.996 0.996 ...
+ $ pH                  : num [1:6497] 3 3.3 3.26 3.19 3.19 3.26 3.18 3 3.3 3.22 ...
+ $ sulphates           : num [1:6497] 0.45 0.49 0.44 0.4 0.4 0.44 0.47 0.45 0.49 0.45 ...
+ $ alcohol             : num [1:6497] 8.8 9.5 10.1 9.9 9.9 10.1 9.6 8.8 9.5 11 ...
+ $ quality             : num [1:6497] 6 6 6 6 6 6 6 6 6 6 ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   type = col_character(),
+  ..   `fixed acidity` = col_double(),
+  ..   `volatile acidity` = col_double(),
+  ..   `citric acid` = col_double(),
+  ..   `residual sugar` = col_double(),
+  ..   chlorides = col_double(),
+  ..   `free sulfur dioxide` = col_double(),
+  ..   `total sulfur dioxide` = col_double(),
+  ..   density = col_double(),
+  ..   pH = col_double(),
+  ..   sulphates = col_double(),
+  ..   alcohol = col_double(),
+  ..   quality = col_double()
+  .. )
+ - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the levels of factor variables</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># In this case, there is only one factor variable, "type"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(wine<span class="sc">$</span>type)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the column names and data types:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(wine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "type"                 "fixed acidity"        "volatile acidity"    
+ [4] "citric acid"          "residual sugar"       "chlorides"           
+ [7] "free sulfur dioxide"  "total sulfur dioxide" "density"             
+[10] "pH"                   "sulphates"            "alcohol"             
+[13] "quality"             </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(wine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>spc_tbl_ [6,497 × 13] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ type                : chr [1:6497] "white" "white" "white" "white" ...
+ $ fixed acidity       : num [1:6497] 7 6.3 8.1 7.2 7.2 8.1 6.2 7 6.3 8.1 ...
+ $ volatile acidity    : num [1:6497] 0.27 0.3 0.28 0.23 0.23 0.28 0.32 0.27 0.3 0.22 ...
+ $ citric acid         : num [1:6497] 0.36 0.34 0.4 0.32 0.32 0.4 0.16 0.36 0.34 0.43 ...
+ $ residual sugar      : num [1:6497] 20.7 1.6 6.9 8.5 8.5 6.9 7 20.7 1.6 1.5 ...
+ $ chlorides           : num [1:6497] 0.045 0.049 0.05 0.058 0.058 0.05 0.045 0.045 0.049 0.044 ...
+ $ free sulfur dioxide : num [1:6497] 45 14 30 47 47 30 30 45 14 28 ...
+ $ total sulfur dioxide: num [1:6497] 170 132 97 186 186 97 136 170 132 129 ...
+ $ density             : num [1:6497] 1.001 0.994 0.995 0.996 0.996 ...
+ $ pH                  : num [1:6497] 3 3.3 3.26 3.19 3.19 3.26 3.18 3 3.3 3.22 ...
+ $ sulphates           : num [1:6497] 0.45 0.49 0.44 0.4 0.4 0.44 0.47 0.45 0.49 0.45 ...
+ $ alcohol             : num [1:6497] 8.8 9.5 10.1 9.9 9.9 10.1 9.6 8.8 9.5 11 ...
+ $ quality             : num [1:6497] 6 6 6 6 6 6 6 6 6 6 ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   type = col_character(),
+  ..   `fixed acidity` = col_double(),
+  ..   `volatile acidity` = col_double(),
+  ..   `citric acid` = col_double(),
+  ..   `residual sugar` = col_double(),
+  ..   chlorides = col_double(),
+  ..   `free sulfur dioxide` = col_double(),
+  ..   `total sulfur dioxide` = col_double(),
+  ..   density = col_double(),
+  ..   pH = col_double(),
+  ..   sulphates = col_double(),
+  ..   alcohol = col_double(),
+  ..   quality = col_double()
+  .. )
+ - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the 'type' variable to a factor if it's not already:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>wine<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(wine<span class="sc">$</span>type)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the data types again to ensure the conversion was successful:</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(wine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>spc_tbl_ [6,497 × 13] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ type                : Factor w/ 2 levels "red","white": 2 2 2 2 2 2 2 2 2 2 ...
+ $ fixed acidity       : num [1:6497] 7 6.3 8.1 7.2 7.2 8.1 6.2 7 6.3 8.1 ...
+ $ volatile acidity    : num [1:6497] 0.27 0.3 0.28 0.23 0.23 0.28 0.32 0.27 0.3 0.22 ...
+ $ citric acid         : num [1:6497] 0.36 0.34 0.4 0.32 0.32 0.4 0.16 0.36 0.34 0.43 ...
+ $ residual sugar      : num [1:6497] 20.7 1.6 6.9 8.5 8.5 6.9 7 20.7 1.6 1.5 ...
+ $ chlorides           : num [1:6497] 0.045 0.049 0.05 0.058 0.058 0.05 0.045 0.045 0.049 0.044 ...
+ $ free sulfur dioxide : num [1:6497] 45 14 30 47 47 30 30 45 14 28 ...
+ $ total sulfur dioxide: num [1:6497] 170 132 97 186 186 97 136 170 132 129 ...
+ $ density             : num [1:6497] 1.001 0.994 0.995 0.996 0.996 ...
+ $ pH                  : num [1:6497] 3 3.3 3.26 3.19 3.19 3.26 3.18 3 3.3 3.22 ...
+ $ sulphates           : num [1:6497] 0.45 0.49 0.44 0.4 0.4 0.44 0.47 0.45 0.49 0.45 ...
+ $ alcohol             : num [1:6497] 8.8 9.5 10.1 9.9 9.9 10.1 9.6 8.8 9.5 11 ...
+ $ quality             : num [1:6497] 6 6 6 6 6 6 6 6 6 6 ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   type = col_character(),
+  ..   `fixed acidity` = col_double(),
+  ..   `volatile acidity` = col_double(),
+  ..   `citric acid` = col_double(),
+  ..   `residual sugar` = col_double(),
+  ..   chlorides = col_double(),
+  ..   `free sulfur dioxide` = col_double(),
+  ..   `total sulfur dioxide` = col_double(),
+  ..   density = col_double(),
+  ..   pH = col_double(),
+  ..   sulphates = col_double(),
+  ..   alcohol = col_double(),
+  ..   quality = col_double()
+  .. )
+ - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<p>from the output from the line <code>dim(wine)</code> we can see that the dimensions of the wine dataset are <strong>6497</strong> rows and <strong>13</strong> columns.</p>
+</section>
+<section id="subsetting" class="level2">
+<h2 class="anchored" data-anchor-id="subsetting">Subsetting</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the data frame to include the first 10 observations</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>wine_subset <span class="ot">&lt;-</span> wine[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, ]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the subset</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(wine_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 13
+   type  fixed a…¹ volat…² citri…³ resid…⁴ chlor…⁵ free …⁶ total…⁷ density    pH
+   &lt;fct&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+ 1 white       7      0.27    0.36    20.7   0.045      45     170   1.00   3   
+ 2 white       6.3    0.3     0.34     1.6   0.049      14     132   0.994  3.3 
+ 3 white       8.1    0.28    0.4      6.9   0.05       30      97   0.995  3.26
+ 4 white       7.2    0.23    0.32     8.5   0.058      47     186   0.996  3.19
+ 5 white       7.2    0.23    0.32     8.5   0.058      47     186   0.996  3.19
+ 6 white       8.1    0.28    0.4      6.9   0.05       30      97   0.995  3.26
+ 7 white       6.2    0.32    0.16     7     0.045      30     136   0.995  3.18
+ 8 white       7      0.27    0.36    20.7   0.045      45     170   1.00   3   
+ 9 white       6.3    0.3     0.34     1.6   0.049      14     132   0.994  3.3 
+10 white       8.1    0.22    0.43     1.5   0.044      28     129   0.994  3.22
+# … with 3 more variables: sulphates &lt;dbl&gt;, alcohol &lt;dbl&gt;, quality &lt;dbl&gt;, and
+#   abbreviated variable names ¹​`fixed acidity`, ²​`volatile acidity`,
+#   ³​`citric acid`, ⁴​`residual sugar`, ⁵​chlorides, ⁶​`free sulfur dioxide`,
+#   ⁷​`total sulfur dioxide`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the subset to a matrix</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>wine_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(wine_subset)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the structure of the matrix</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(wine_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chr [1:10, 1:13] "white" "white" "white" "white" "white" "white" "white" ...
+ - attr(*, "dimnames")=List of 2
+  ..$ : NULL
+  ..$ : chr [1:13] "type" "fixed acidity" "volatile acidity" "citric acid" ...</code></pre>
+</div>
+</div>
+</section>
+<section id="create-a-new-data-frame" class="level2">
+<h2 class="anchored" data-anchor-id="create-a-new-data-frame">Create a new Data Frame</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an integer variable with 10 observations</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>integer_var <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">18</span>, <span class="dv">24</span>, <span class="dv">30</span>, <span class="dv">14</span>, <span class="dv">25</span>, <span class="dv">22</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an ordinal variable with 10 observations</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>ordinal_var <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"low"</span>, <span class="st">"medium"</span>, <span class="st">"low"</span>, <span class="st">"high"</span>, <span class="st">"medium"</span>, <span class="st">"low"</span>, <span class="st">"high"</span>, <span class="st">"medium"</span>, <span class="st">"high"</span>, <span class="st">"medium"</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the ordinal variable to a factor with ordered levels</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>ordinal_var <span class="ot">&lt;-</span> <span class="fu">factor</span>(ordinal_var, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"low"</span>, <span class="st">"medium"</span>, <span class="st">"high"</span>), <span class="at">ordered =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a data frame with the two variables</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(integer_var, ordinal_var)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the new data frame</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(new_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   integer_var ordinal_var
+1           10         low
+2           20      medium
+3           15         low
+4           12        high
+5           18      medium
+6           24         low
+7           30        high
+8           14      medium
+9           25        high
+10          22      medium</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Descriptive statistics for the integer variable</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(integer_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  10.00   14.25   19.00   19.00   23.50   30.00 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency distribution for the ordinal variable</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ordinal_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ordinal_var
+   low medium   high 
+     3      4      3 </code></pre>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

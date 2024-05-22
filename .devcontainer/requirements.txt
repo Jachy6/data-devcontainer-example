@@ -1,0 +1,33 @@
+pybryt
+pylint
+datascience
+otter-grader
+numpy
+pandas
+scipy
+folium>=0.9.1
+matplotlib
+ipywidgets>=7.0.0
+bqplot
+nbinteract>=0.0.12
+okpy
+scikit-learn
+seaborn                 # Statistical data visualization
+# statsmodels             # Statistical modeling and tests
+# nltk                    # Natural Language Toolkit
+# gensim                  # Text processing, Topic Modeling
+# spacy                   # Advanced Natural Language Processing
+# xgboost                 # Gradient Boosting trees implementation
+# lightgbm                # Gradient Boosting trees implementation
+# catboost                # Gradient Boosting trees implementation
+# plotly                  # Interactive Plotting Library
+# altair                  # Declarative Visualization in Python
+# geopandas               # Geospatial data manipulation
+# shap                    # Interpretability of ML models
+# yellowbrick             # Visualization for Machine Learning
+# eli5                    # Debugging/Inspection for ML models
+# pytorch                 # Deep learning framework
+# tensorflow              # Deep learning framework
+# keras                   # Deep learning API
+# joblib                  # Tools for pipelining python jobs
+# bokeh                   # Interactive Visualization Library
